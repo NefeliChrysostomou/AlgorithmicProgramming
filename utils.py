@@ -1,9 +1,10 @@
 import csv
 from models import Customer, Restaurant
-from data_structures import CustomerLinkedList, RestaurantArray
+from data_structures import CustomerLinkedList, RestaurantArray, RestaurantLinkedList
 
 def import_customers_from_csv(filename):
-    customer_list = CustomerLinkedList()
+    """Import customers from a CSV file into a CustomerLinkedList"""
+    customer_array = CustomerLinkedList()
     
     try:
         with open(filename, 'r') as file:
@@ -12,44 +13,44 @@ def import_customers_from_csv(filename):
             
             for row in csv_reader:
                 customer_id, name, age, gender = row[0], row[1], int(row[2]), row[3]
-                # Assume ride data is in subsequent columns
-                rides_taken = row[4:] if len(row) > 4 else []
+                ticket_tier = row[4:] if len(row) > 4 else []
                 
-                customer = Customer(customer_id, name, age, gender, rides_taken)
-                customer_list.add_customer(customer)
+                customer = Customer(customer_id, name, age, gender, ticket_tier)
+                customer_array.add_customer(customer)
         
-        return customer_list
+        return customer_array
     except FileNotFoundError:
         print(f"Error: File '{filename}' not found.")
         return None
 
 
-def import_restaurants_from_csv(filename):
-    """Import restaurants from a CSV file into a RestaurantArray"""
-    restaurant_array = RestaurantArray()
-    
+def import_restaurants_from_csv(filename, use_linked_list=False):
+    """
+    Import restaurants from a CSV file
+    By default uses RestaurantArray
+    If use_linked_list=True, uses RestaurantLinkedList instead
+    """
+    if use_linked_list:
+        restaurant_container = RestaurantLinkedList()
+        add_method = restaurant_container.add_restaurant
+    else:
+        restaurant_container = RestaurantArray()
+        add_method = restaurant_container.add_restaurant
+
     try:
         with open(filename, 'r') as file:
             csv_reader = csv.reader(file)
             header = next(csv_reader)  # Skip header row
-            
+
             for row in csv_reader:
                 restaurant_id, name, location = row[0], row[1], row[2]
-                
-                # Parse menu items and prices (if present)
-                menu_items = []
-                prices = []
-                
-                if len(row) > 3 and len(row) % 2 == 1:  # Make sure we have pairs of items/prices
-                    for i in range(3, len(row), 2):
-                        if i+1 < len(row):  # Make sure we don't go out of bounds
-                            menu_items.append(row[i])
-                            prices.append(float(row[i+1]))
-                
-                restaurant = Restaurant(restaurant_id, name, location, menu_items, prices)
-                restaurant_array.add_restaurant(restaurant)
-        
-        return restaurant_array
+
+                type = row[3:] if len(row) > 3 else []
+
+                restaurant = Restaurant(restaurant_id, name, location, type)
+                add_method(restaurant)
+
+        return restaurant_container
     except FileNotFoundError:
         print(f"Error: File '{filename}' not found.")
         return None

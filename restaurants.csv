@@ -1,6 +1,6 @@
-id,name,location,item1,price1,item2,price2,item3,price3
-R1,Burger Palace,North Wing,Cheeseburger,8.99,Fries,3.99,Soda,2.49
-R2,Pizza Place,North Wing,Pepperoni Pizza,12.99,Cheese Pizza,10.99,Garlic Bread,4.99
-R3,Ice Cream Shop,South Wing,Vanilla Cone,3.49,Chocolate Sundae,5.99,Banana Split,7.99
-R4,Taco Stand,East Wing,Beef Taco,4.99,Chicken Burrito,9.99,Nachos,7.49
-R5,Noodle House,South Wing,Ramen,11.99,Pad Thai,13.49,Fried Rice,10.99
+id,name,location,type
+R1,Burger Palace,North Wing,American
+R2,Pizza Place,North Wing,Pizzeria
+R3,Ice Cream Shop,South Wing,Dessert
+R4,Taco Stand,East Wing,Mexican
+R5,Noodle House,South Wing,Asian

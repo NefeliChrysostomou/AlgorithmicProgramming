@@ -1,5 +1,5 @@
-customer_id,name,age,gender,ride1,ride2,ride3
-1,John Doe,25,Male,ride01,ride02,ride03
-2,Jane Smith,30,Female,ride02,ride04
-3,Bob Johnson,45,Male,ride01,ride05,ride06,ride07
-4,Alice Brown,22,Female,ride03
+customer_id,name,age,gender,ticket_tier
+1,John Doe,25,Male,Silver
+2,Jane Smith,30,Female,Gold
+3,Bob Johnson,45,Male,Platinum
+4,Alice Brown,22,Female,Bronze

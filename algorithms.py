@@ -1,92 +1,81 @@
-def binary_search_most_rides(sorted_customers):
-    """
-    Since customers are sorted by ride count, the one with most rides
-    will be at the end of the array
-    """
-    if not sorted_customers:
+def binary_search_most(items, key_func):
+    """Return the item with the highest value based on the key function"""
+    if not items:
         return None
-    return sorted_customers[-1]
+    return max(items, key=key_func)
 
-def binary_search_by_ride_count(sorted_customers, target_rides):
-    """Binary search to find customers with an exact ride count"""
-    left = 0
-    right = len(sorted_customers) - 1
-    
+
+def binary_search_by_key(sorted_items, target_value, key_func):
+    """Generic binary search to find an item by the target value using key_func"""
+    left, right = 0, len(sorted_items) - 1
     while left <= right:
         mid = (left + right) // 2
-        if sorted_customers[mid].get_ride_count() == target_rides:
+        mid_value = key_func(sorted_items[mid])
+        if mid_value == target_value:
             return mid
-        elif sorted_customers[mid].get_ride_count() < target_rides:
+        elif mid_value < target_value:
             left = mid + 1
         else:
             right = mid - 1
-    
-    return -1  
+    return -1
 
-def quicksort_by_demographics(customers, demographic_key):
-    """Sort customers by the specified demographic attribute using quicksort"""
-    if len(customers) <= 1:
-        return customers
+
+def quicksort(items, key_func):
+    """Generic quicksort using key function"""
+    if len(items) <= 1:
+        return items
     
-    pivot = customers[len(customers) // 2]
+    pivot = items[len(items) // 2]
+    pivot_value = key_func(pivot)
     
-    def get_value(customer):
-        if demographic_key == 'age':
-            return customer.get_age()
-        elif demographic_key == 'gender':
-            return customer.get_gender()
-        elif demographic_key == 'name':
-            return customer.get_name()
-        elif demographic_key == 'rides':
-            return customer.get_ride_count()
-        # Default to customer ID
-        return customer.get_customer_id()
+    left = [x for x in items if key_func(x) < pivot_value]
+    middle = [x for x in items if key_func(x) == pivot_value]
+    right = [x for x in items if key_func(x) > pivot_value]
     
-    pivot_value = get_value(pivot)
-    
-    left = [x for x in customers if get_value(x) < pivot_value]
-    middle = [x for x in customers if get_value(x) == pivot_value]
-    right = [x for x in customers if get_value(x) > pivot_value]
-    
-    return quicksort_by_demographics(left, demographic_key) + middle + quicksort_by_demographics(right, demographic_key)
+    return quicksort(left, key_func) + middle + quicksort(right, key_func)
 
 
 
-def linear_search_by_location(restaurant_array, target_location):
-    """
-    Linear search to find restaurants in a specific location
-    Returns a list of restaurants that match the location
-    """
-    matching_restaurants = []
+def linear_search(items, target_value, key_func):
+    """Generic linear search to find items by attribute using key_func"""
+    results = []
     
-    for i in range(restaurant_array.get_size()):
-        restaurant = restaurant_array.get_restaurant(i)
-        if restaurant and restaurant.get_location().lower() == target_location.lower():
-            matching_restaurants.append(restaurant)
+    # If collection has a 'get_all' method, use it
+    if hasattr(items, 'get_all'):
+        items = items.get_all()
+    elif hasattr(items, 'get_all_restaurants'):
+        items = items.get_all_restaurants()
     
-    return matching_restaurants
+    for item in items:
+        if item and key_func(item).lower() == target_value.lower():
+            results.append(item)
+    
+    return results
 
-def merge_sort_by_price(restaurants):
-    """Sort restaurants by average meal price using merge sort"""
-    if len(restaurants) <= 1:
-        return restaurants
-    
-    mid = len(restaurants) // 2
-    left = restaurants[:mid]
-    right = restaurants[mid:]
-    
-    left = merge_sort_by_price(left)
-    right = merge_sort_by_price(right)
-    
-    return merge(left, right)
 
-def merge(left, right):
-    """Helper function for merge sort"""
+def merge_sort(items, key_func):
+    """Generic merge sort using key function"""
+    if hasattr(items, 'get_all_restaurants'):
+        items = items.get_all_restaurants()
+    elif hasattr(items, 'get_all'):
+        items = items.get_all()
+    
+    if len(items) <= 1:
+        return items
+    
+    mid = len(items) // 2
+    left = merge_sort(items[:mid], key_func)
+    right = merge_sort(items[mid:], key_func)
+    
+    return merge(left, right, key_func)
+
+def merge(left, right, key_func):
+    """Helper merge function"""
     result = []
     i = j = 0
     
     while i < len(left) and j < len(right):
-        if left[i].get_average_price() <= right[j].get_average_price():
+        if key_func(left[i]) <= key_func(right[j]):
             result.append(left[i])
             i += 1
         else:

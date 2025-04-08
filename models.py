@@ -1,106 +1,88 @@
 class Customer:
-    def __init__(self, customer_id, name, age, gender, rides_taken=None):
+    def __init__(self, customer_id, name, age, gender, ticket_tier):
         self.customer_id = customer_id
         self.name = name
         self.age = age
         self.gender = gender
-        self.rides_taken = rides_taken if rides_taken else []
-    
+        self.ticket_tier = ticket_tier  # bronze, silver, gold, platinum
+
     def get_customer_id(self):
         return self.customer_id
-    
+
     def get_name(self):
         return self.name
-    
+
     def get_age(self):
         return self.age
-    
+
     def get_gender(self):
         return self.gender
-    
-    def get_rides_taken(self):
-        return self.rides_taken
-    
+
+    def get_ticket_tier(self):
+        return self.ticket_tier
+
     def set_name(self, name):
         self.name = name
-    
+
     def set_age(self, age):
         self.age = age
-    
+
     def set_gender(self, gender):
         self.gender = gender
-        
-        
-    def add_ride(self, ride_id):
-        self.rides_taken.append(ride_id)
-    
-    def get_ride_count(self):
-        return len(self.rides_taken)
-    
-    
+
+    def set_ticket_tier(self, ticket_tier):
+        self.ticket_tier = ticket_tier
+
     def __lt__(self, other):
-        """Less than comparison based on ride count"""
-        return self.get_ride_count() < other.get_ride_count()
-    
+        """Comparison based on ticket tier hierarchy"""
+        tiers = {'bronze': 1, 'silver': 2, 'gold': 3, 'platinum': 4}
+        return tiers.get(self.ticket_tier.lower(), 0) < tiers.get(other.ticket_tier.lower(), 0)
+
     def __eq__(self, other):
-        """Equal comparison based on customer_id"""
         if isinstance(other, Customer):
             return self.customer_id == other.customer_id
         return False
-    
+
     def __str__(self):
-        return f"Customer {self.customer_id}: {self.name}, {self.age}, {self.gender}, Rides: {len(self.rides_taken)}"
-    
+        return f"Customer {self.customer_id}: {self.name}, {self.age}, {self.gender}, Tier: {self.ticket_tier}"
+
 
 class Restaurant:
-    def __init__(self, restaurant_id, name, location, menu_items=None, prices=None):
+    def __init__(self, restaurant_id, name, location, type_):
         self.restaurant_id = restaurant_id
         self.name = name
-        self.location = location  # ex. "North Wing"
-        self.menu_items = menu_items if menu_items else []
-        self.prices = prices if prices else []
-    
+        self.location = location
+        self.type = type_
+
     def get_restaurant_id(self):
         return self.restaurant_id
-    
+
     def get_name(self):
         return self.name
-    
+
     def get_location(self):
         return self.location
-    
-    def get_menu_items(self):
-        return self.menu_items
-    
-    def get_prices(self):
-        return self.prices
-    
+
+    def get_type(self):
+        return self.type
+
     def set_name(self, name):
         self.name = name
-    
+
     def set_location(self, location):
         self.location = location
-    
 
-    def add_menu_item(self, item, price):
-        self.menu_items.append(item)
-        self.prices.append(price)
-    
-    def get_average_price(self):
-        if not self.prices:
-            return 0
-        return sum(self.prices) / len(self.prices)
-    
+    def set_type(self, type_):
+        self.type = type_
 
     def __lt__(self, other):
-        """Less than comparison based on average price"""
-        return self.get_average_price() < other.get_average_price()
-    
+        """Comparison based on name (alphabetical)"""
+        return self.name.lower() < other.name.lower()
+
     def __eq__(self, other):
-        """Equal comparison based on restaurant_id"""
         if isinstance(other, Restaurant):
             return self.restaurant_id == other.restaurant_id
         return False
-    
+
     def __str__(self):
-        return f"Restaurant {self.restaurant_id}: {self.name}, {self.location}, Avg Price: ${self.get_average_price():.2f}"
+        return f"Restaurant {self.restaurant_id}: {self.name}, {self.location}, Type: {self.type}"
