@@ -1,17 +1,24 @@
-class Node:
+# Singly Linked List Node
+class SinglyListNode:
     def __init__(self, data):
         self.data = data
         self.next = None
 
+# Doubly Linked List Node
+class DoublyListNode:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+        self.prev = None
 
-class LinkedList:
+# Singly Linked List
+class SinglyLinkedList:
     def __init__(self):
         self.head = None
         self.count = 0
 
     def add(self, item):
-        """Add an item to the end of the linked list"""
-        new_node = Node(item)
+        new_node = SinglyListNode(item)
         if not self.head:
             self.head = new_node
         else:
@@ -22,7 +29,6 @@ class LinkedList:
         self.count += 1
 
     def get_by_attribute(self, attribute_name, value):
-        """Get an item by a specific attribute value"""
         current = self.head
         while current:
             if hasattr(current.data, attribute_name) and getattr(current.data, attribute_name) == value:
@@ -31,29 +37,31 @@ class LinkedList:
         return None
 
     def remove_by_attribute(self, attribute_name, value):
-        """Remove an item by a specific attribute value"""
         if not self.head:
-            return False
-
-        # Check head node
+            return False  # Empty list
+        
+        # Check the head node first
         if hasattr(self.head.data, attribute_name) and getattr(self.head.data, attribute_name) == value:
             self.head = self.head.next
             self.count -= 1
+            if not self.head:
+                self.tail = None  # If the list is now empty
             return True
-
-        # Search for the item to delete
+        
+        # Traverse the list to find the node to remove
         current = self.head
-        while current.next:
+        while current and current.next:
             if hasattr(current.next.data, attribute_name) and getattr(current.next.data, attribute_name) == value:
                 current.next = current.next.next
                 self.count -= 1
+                if not current.next:  # If we removed the tail
+                    self.tail = current
                 return True
             current = current.next
-
-        return False
+        
+        return False  # Node with the specified attribute and value not found
 
     def get_all(self):
-        """Return a list of all items"""
         items = []
         current = self.head
         while current:
@@ -61,140 +69,181 @@ class LinkedList:
             current = current.next
         return items
 
-    def size(self):
-        """Return the number of items in the list"""
+    def get_size(self):
         return self.count
-    
 
-
-# --- Customer Linked List ---
-class CustomerLinkedList(LinkedList):
+# Doubly Linked List
+class DoublyLinkedList(SinglyLinkedList):
     def __init__(self):
-        self.head = None
-        self.count = 0
-        
-    def add_customer(self, customer):
-        return self.add(customer)
+        super().__init__()
+        self.tail = None
 
-    def get_customer(self, customer_id):
-        return self.get_by_attribute("customer_id", customer_id)
+    def add(self, item):
+        new_node = DoublyListNode(item)
+        if not self.head:
+            self.head = new_node
+            self.tail = new_node
+        else:
+            self.tail.next = new_node
+            new_node.prev = self.tail
+            self.tail = new_node
+        self.count += 1
 
-    def remove_customer(self, customer_id):
-        return self.remove_by_attribute("customer_id", customer_id)
-
-    def get_all_customers(self):
-        return self.get_all()
-    
-    def sort_by_name(self):
-        """Sort all items in the linked list by name"""
-        items = self.get_all()
-        items.sort(key=lambda item: item.name.lower())
-        self.head = None
-        self.count = 0
-        for item in items:
-            self.add(item)
-        return self.get_all()
-
-
-# --- Restaurant Linked List ---
-class RestaurantLinkedList(LinkedList):
-    def __init__(self):
-        self.head = None
-        self.count = 0
-
-    def add_restaurant(self, restaurant):
-        return self.add(restaurant)
-
-    def get_restaurant(self, restaurant_id):
-        return self.get_by_attribute("restaurant_id", restaurant_id)
-
-    def remove_restaurant(self, restaurant_id):
-        return self.remove_by_attribute("restaurant_id", restaurant_id)
-
-    def get_all_restaurants(self):
-        return self.get_all()
-
-    def sort_by_name(self):
-        """Sort all items in the linked list by name"""
-        items = self.get_all() 
-        items.sort(key=lambda item: item.name.lower())
-        self.head = None
-        self.count = 0
-        for item in items:
-            self.add(item)
-        return self.get_all()
-
-
-
-# --- Customer Array ---
-class CustomerArray:
-    def __init__(self):
-        self.customers = []
-
-    def add_customer(self, customer):
-        self.customers.append(customer)
-
-    def get_customer(self, index):
-        if 0 <= index < len(self.customers):
-            return self.customers[index]
-        return None
-
-    def remove_customer(self, customer_id):
-        for i, customer in enumerate(self.customers):
-            if customer.customer_id == customer_id:
-                del self.customers[i]
+    def remove_by_attribute(self, attribute_name, value):
+        if not self.head:
+            return False
+        if hasattr(self.head.data, attribute_name) and getattr(self.head.data, attribute_name) == value:
+            if self.head.next:
+                self.head.next.prev = None
+            self.head = self.head.next
+            if not self.head:
+                self.tail = None
+            self.count -= 1
+            return True
+        current = self.head
+        while current:
+            if hasattr(current.data, attribute_name) and getattr(current.data, attribute_name) == value:
+                if current.next:
+                    current.next.prev = current.prev
+                if current.prev:
+                    current.prev.next = current.next
+                if current == self.tail:
+                    self.tail = current.prev
+                self.count -= 1
                 return True
+            current = current.next
         return False
 
-    def size(self):
-        return len(self.customers)
-
-    def sort_by_ticket_tier(self):
-        """Sort customers by ticket tier (since rides_taken no longer exists)"""
-        self.customers.sort(key=lambda c: c.ticket_tier)
-        return self.customers
-
-    def sort_by_name(self):
-        """Sort customers by name"""
-        self.customers.sort(key=lambda c: c.name.lower())  
-        return self.customers
+    def get_reverse(self):
+        items = []
+        current = self.tail
+        while current:
+            items.append(current.data)
+            current = current.prev
+        return items
 
 
-# --- Restaurant Array ---
-class RestaurantArray:
+# Trees
+
+
+class TreeNode:
+    def __init__(self, data):
+        self.data = data
+        self.left = None
+        self.right = None
+
+# Regular Binary Tree
+class BinaryTree:
+    def __init__(self):
+        self.root = None
+
+    def insert(self, data):
+        if not self.root:
+            self.root = TreeNode(data)
+        else:
+            self._insert(self.root, data)
+
+    def _insert(self, current, data):
+        if current.left is None:
+            current.left = TreeNode(data)
+        elif current.right is None:
+            current.right = TreeNode(data)
+        else:
+            # You can choose how to insert when both left and right are filled
+            self._insert(current.left, data)
+
+    def inorder(self, node=None):
+        if node is None:
+            node = self.root
+        if node:
+            if node.left:
+                self.inorder(node.left)
+            print(node.data, end=" ")
+            if node.right:
+                self.inorder(node.right)
+
+    def preorder(self, node=None):
+        if node is None:
+            node = self.root
+        if node:
+            print(node.data, end=" ")
+            if node.left:
+                self.preorder(node.left)
+            if node.right:
+                self.preorder(node.right)
+
+    def postorder(self, node=None):
+        if node is None:
+            node = self.root
+        if node:
+            if node.left:
+                self.postorder(node.left)
+            if node.right:
+                self.postorder(node.right)
+            print(node.data, end=" ")
+
+# Binary Search Tree (BST) (no self-balancing)
+class BST(BinaryTree):
+    def __init__(self):
+        super().__init__()
+
+    def insert(self, data):
+        if not self.root:
+            self.root = TreeNode(data)
+        else:
+            self._insert(self.root, data)
+
+    def _insert(self, current, data):
+        if data < current.data:
+            if current.left:
+                self._insert(current.left, data)
+            else:
+                current.left = TreeNode(data)
+        elif data > current.data:
+            if current.right:
+                self._insert(current.right, data)
+            else:
+                current.right = TreeNode(data)
+
+# Dynamic Array
+
+class DynamicArray:
     def __init__(self, initial_capacity=10):
-        self.restaurants = [None] * initial_capacity
+        self.array = [None] * initial_capacity # imitating a static, non-resizable c-style array (python does not have these)
         self.size = 0
         self.capacity = initial_capacity
 
-    def add_restaurant(self, restaurant):
+    def add(self, item):
+        """Add an item to the array. Resizes if needed."""
         if self.size >= self.capacity:
             self._resize(self.capacity * 2)
-
-        self.restaurants[self.size] = restaurant
+        
+        self.array[self.size] = item
         self.size += 1
 
     def _resize(self, new_capacity):
+        """Resize the internal array to the new capacity."""
         new_array = [None] * new_capacity
         for i in range(self.size):
-            new_array[i] = self.restaurants[i]
+            new_array[i] = self.array[i]
 
-        self.restaurants = new_array
+        self.array = new_array
         self.capacity = new_capacity
 
-    def get_restaurant(self, index):
+    def get(self, index):
+        """Retrieve an item by index, returns None if out of bounds."""
         if 0 <= index < self.size:
-            return self.restaurants[index]
+            return self.array[index]
         return None
 
-    def remove_restaurant(self, restaurant_id):
+    def remove(self, item):
+        """Remove the item from the array and shift elements."""
         for i in range(self.size):
-            if self.restaurants[i] and self.restaurants[i].restaurant_id == restaurant_id:
-                # Shift elements
+            if self.array[i] == item:
                 for j in range(i, self.size - 1):
-                    self.restaurants[j] = self.restaurants[j + 1]
+                    self.array[j] = self.array[j + 1]
 
-                self.restaurants[self.size - 1] = None
+                self.array[self.size - 1] = None
                 self.size -= 1
 
                 # Resize if too empty
@@ -204,8 +253,15 @@ class RestaurantArray:
                 return True
         return False
 
-    def get_all_restaurants(self):
-        return [self.restaurants[i] for i in range(self.size) if self.restaurants[i]]
-
     def get_size(self):
+        """Return the number of elements in the array."""
         return self.size
+
+    def get_all(self):
+        """Return a list of all non-None elements in the array."""
+        return [self.array[i] for i in range(self.size) if self.array[i]]
+
+    def __str__(self):
+        """Return a string representation of the array."""
+        return str([self.array[i] for i in range(self.size)])
+

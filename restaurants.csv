@@ -1,6 +1,21 @@
-id,name,location,type
-R1,Burger Palace,North Wing,American
-R2,Pizza Place,North Wing,Pizzeria
-R3,Ice Cream Shop,South Wing,Dessert
-R4,Taco Stand,East Wing,Mexican
-R5,Noodle House,South Wing,Asian
+restaurant_id,name,location,type
+1,The Steakhouse,Central Park,American
+2,Sushi World,East Side,Japanese
+3,La Patisserie,West End,French
+4,Ocean Grill,Beachfront,Seafood
+5,Mama's Kitchen,Old Town,Italian
+6,The Bistro,Downtown,French
+7,Urban Delights,City Square,Modern American
+8,Sweet Treats,Central Park,Desserts
+9,The Royal Diner,Main Street,American
+10,Golden Dragon,East Side,Chinese
+11,The Greenhouse,Garden Area,Vegetarian
+12,Pasta Palace,Old Town,Italian
+13,Flame & Fire,Mountain Peak,Barbecue
+14,The Tasting Room,City Square,Fine Dining
+15,Sushi Garden,Beachfront,Japanese
+16,Delightful Bites,Downtown,Modern American
+17,The Seafood Shack,Harbor,Seafood
+18,Crepes & More,West End,French
+19,Mexican Fiesta,Main Street,Mexican
+20,The Pizza Parlor,Old Town,Italian

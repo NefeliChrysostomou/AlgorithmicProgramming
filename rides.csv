@@ -1,0 +1,21 @@
+ride_id,name,location,duration,ticket_tier
+1,Thunder Mountain,Adventure Land,5,bronze
+2,Space Voyage,Future World,7,silver
+3,Dragon's Lair,Fantasy Kingdom,6,bronze
+4,Ocean Explorer,Water World,4,platinum
+5,Coaster Express,Adventure Land,3,gold
+6,Haunted Mansion,Spooky Town,8,platinum
+7,Star Cruiser,Future World,5,silver
+8,Caribbean Cruise,Water World,6,gold
+9,Speed Racer,Adventure Land,4,bronze
+10,Galaxy Quest,Future World,7,gold
+11,Jungle Safari,Wild World,5,bronze
+12,Firestorm,Fire World,8,platinum
+13,Space Odyssey,Future World,6,silver
+14,The Beast,Adventure Land,7,bronze
+15,Dragon Rider,Fantasy Kingdom,6,gold
+16,Waterfall Rush,Water World,3,platinum
+17,Iron Tornado,Adventure Land,7,gold
+18,Underwater Escape,Water World,4,silver
+19,Mountain Ride,Mountain Peaks,5,bronze
+20,Super Coaster,Adventure Land,6,silver

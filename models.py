@@ -1,4 +1,113 @@
-class Customer:
+tier_order = ['bronze', 'silver', 'gold', 'platinum'] # add new items in ascending order
+
+"""
+This code uses a python "trick", classes in python are basically dictionaries 
+"""
+
+class Model:
+    COMPARE_ATTRIBUTE = None # set this to the name of the attribute you want to compare
+
+    # due to the way static members work, these methods have to be implemented in the subclasses
+    # to bind the class variable correctly
+    def set_compare_attribute(self, attr):
+        raise NotImplementedError("Subclasses must implement set_compare_attribute.")
+
+    def get_compare_attribute(self):
+        raise NotImplementedError("Subclasses must implement get_compare_attribute.")
+
+    def get_compare_value(self):
+        if self.COMPARE_ATTRIBUTE is None:
+            raise ValueError("No comparison attribute set.")
+        if not hasattr(self, self.COMPARE_ATTRIBUTE):
+            raise AttributeError(f"Attribute '{self.COMPARE_ATTRIBUTE}' not found in object.")
+        return getattr(self, self.COMPARE_ATTRIBUTE)
+
+
+    def compare(self, other, attr=None):
+        """
+        Compare two objects based on a specified attribute.
+        If no attribute is specified, use the class's COMPARE_ATTRIBUTE.
+        """
+        attr = attr or self.COMPARE_ATTRIBUTE # default to class attribute
+        if attr is None:
+            raise ValueError("No attribute specified for comparison.")
+        if not hasattr(self, attr) or not hasattr(other, attr):
+            raise AttributeError(f"Attribute '{attr}' not found in both objects.")
+        
+        if attr == 'ticket_tier': # special behaviur for their ascending order
+            self_value = tier_order.index(getattr(self, "ticket_tier"))
+            other_value = tier_order.index(getattr(other, "ticket_tier"))
+        else:
+            self_value = getattr(self, attr)
+            other_value = getattr(other, attr)
+
+        if self_value < other_value:
+            return -1
+        elif self_value > other_value:
+            return 1
+        else:
+            return 0
+        
+    def __lt__(self, other):
+        return self.compare(other) < 0
+    
+    def __eq__(self, other):
+        return self.compare(other) == 0
+        
+class Ride(Model):
+    COMPARE_ATTRIBUTE = "ride_id"
+    def __init__(self, ride_id, name, location, duration, ticket_tier):
+        self.ride_id = ride_id
+        self.name = name
+        self.location = location
+        self.duration = duration
+        self.ticket_tier = ticket_tier
+
+    def get_ride_id(self):
+        return self.ride_id
+
+    def set_ride_id(self, ride_id):
+        self.ride_id = ride_id
+
+    def get_name(self):
+        return self.name
+
+    def set_name(self, name):
+        self.name = name
+
+    def get_location(self):
+        return self.location
+
+    def set_location(self, location):
+        self.location = location
+
+    def get_duration(self):
+        return self.duration
+
+    def set_duration(self, duration):
+        self.duration = duration
+
+    def get_ticket_tier(self):
+        return self.ticket_tier
+
+    def set_ticket_tier(self, ticket_tier):
+        self.ticket_tier = ticket_tier
+
+    def set_compare_attribute(self, attr):
+        if hasattr(self, attr):
+            Ride.COMPARE_ATTRIBUTE = attr
+        else:
+            raise AttributeError(f"Attribute '{attr}' not found in Ride class.")
+        
+    def get_compare_attribute(self):
+        return Ride.COMPARE_ATTRIBUTE
+    
+    def __str__(self):
+        return f"Ride {self.ride_id}: {self.name}, {self.location}, Duration: {self.duration}, Tier: {self.ticket_tier}"
+
+
+class Customer(Model):
+    COMPARE_ATTRIBUTE = "customer_id"
     def __init__(self, customer_id, name, age, gender, ticket_tier):
         self.customer_id = customer_id
         self.name = name
@@ -9,45 +118,49 @@ class Customer:
     def get_customer_id(self):
         return self.customer_id
 
+    def set_customer_id(self, customer_id):
+        self.customer_id = customer_id
+
     def get_name(self):
         return self.name
-
-    def get_age(self):
-        return self.age
-
-    def get_gender(self):
-        return self.gender
-
-    def get_ticket_tier(self):
-        return self.ticket_tier
 
     def set_name(self, name):
         self.name = name
 
+    def get_age(self):
+        return self.age
+
     def set_age(self, age):
         self.age = age
+
+    def get_gender(self):
+        return self.gender
 
     def set_gender(self, gender):
         self.gender = gender
 
+    def get_ticket_tier(self):
+        return self.ticket_tier
+
     def set_ticket_tier(self, ticket_tier):
         self.ticket_tier = ticket_tier
 
-    def __lt__(self, other):
-        """Comparison based on ticket tier hierarchy"""
-        tiers = {'bronze': 1, 'silver': 2, 'gold': 3, 'platinum': 4}
-        return tiers.get(self.ticket_tier.lower(), 0) < tiers.get(other.ticket_tier.lower(), 0)
+    def set_compare_attribute(self, attr):
+        if hasattr(self, attr):
+            Customer.COMPARE_ATTRIBUTE = attr
+        else:
+            raise AttributeError(f"Attribute '{attr}' not found in Customer class.")
 
-    def __eq__(self, other):
-        if isinstance(other, Customer):
-            return self.customer_id == other.customer_id
-        return False
+    def get_compare_attribute(self):
+        return Customer.COMPARE_ATTRIBUTE
 
     def __str__(self):
         return f"Customer {self.customer_id}: {self.name}, {self.age}, {self.gender}, Tier: {self.ticket_tier}"
 
 
-class Restaurant:
+class Restaurant(Model):
+    COMPARE_ATTRIBUTE = "restaurant_id"
+
     def __init__(self, restaurant_id, name, location, type_):
         self.restaurant_id = restaurant_id
         self.name = name
@@ -57,32 +170,35 @@ class Restaurant:
     def get_restaurant_id(self):
         return self.restaurant_id
 
+    def set_restaurant_id(self, restaurant_id):
+        self.restaurant_id = restaurant_id
+
     def get_name(self):
         return self.name
-
-    def get_location(self):
-        return self.location
-
-    def get_type(self):
-        return self.type
 
     def set_name(self, name):
         self.name = name
 
+    def get_location(self):
+        return self.location
+
     def set_location(self, location):
         self.location = location
+
+    def get_type(self):
+        return self.type
 
     def set_type(self, type_):
         self.type = type_
 
-    def __lt__(self, other):
-        """Comparison based on name (alphabetical)"""
-        return self.name.lower() < other.name.lower()
+    def set_compare_attribute(self, attr):
+        if hasattr(self, attr):
+            Restaurant.COMPARE_ATTRIBUTE = attr
+        else:
+            raise AttributeError(f"Attribute '{attr}' not found in Restaurant class.")
 
-    def __eq__(self, other):
-        if isinstance(other, Restaurant):
-            return self.restaurant_id == other.restaurant_id
-        return False
+    def get_compare_attribute(self):
+        return Restaurant.COMPARE_ATTRIBUTE
 
     def __str__(self):
         return f"Restaurant {self.restaurant_id}: {self.name}, {self.location}, Type: {self.type}"

@@ -1,5 +1,21 @@
 customer_id,name,age,gender,ticket_tier
-1,John Doe,25,Male,Silver
-2,Jane Smith,30,Female,Gold
-3,Bob Johnson,45,Male,Platinum
-4,Alice Brown,22,Female,Bronze
+101,John Doe,25,Male,silver
+102,Jane Smith,32,Female,platinum
+103,Mark Johnson,18,Male,bronze
+104,Lisa Brown,28,Female,gold
+105,David Wilson,35,Male,silver
+106,Emily Davis,21,Female,bronze
+107,Michael Miller,40,Male,platinum
+108,Sarah Taylor,30,Female,gold
+109,Kevin Anderson,22,Male,bronze
+110,Rebecca Thomas,27,Female,silver
+111,Daniel Harris,33,Male,platinum
+112,Laura Clark,29,Female,gold
+113,James Moore,24,Male,silver
+114,Mary White,36,Female,platinum
+115,Joseph Martinez,26,Male,gold
+116,Anna Jackson,31,Female,bronze
+117,Andrew Lee,23,Male,silver
+118,Olivia Walker,29,Female,platinum
+119,Matthew Hall,34,Male,gold
+120,Charlotte King,22,Female,bronze
