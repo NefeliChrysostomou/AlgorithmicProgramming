@@ -265,6 +265,11 @@ class Application():
 
     def select_search_attribute(self, event):
         self.search_attribute = self.search_attr.get()
+        if self.search_attribute and isinstance(self.data_structure, ds.BST):
+            new_bst = ds.BST()
+            for item in self.memory.inorder_generator():
+                item.set_compare_attribute(self.search_attribute)
+                new_bst.insert(item)
 
     def run_algorithm(self):
         if self.chosen_algorithm is algo.binary_search_by_key:

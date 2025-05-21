@@ -88,7 +88,7 @@ def dfs_search(root, target):
     return dfs_search(root.right, target)
 
 def bst_search(tree, target):
-    tree.search(target)
+    return tree.search(target)
 
 def merge_sort(items, key_func):
     """Generic merge sort using key function"""
