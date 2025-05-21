@@ -17,6 +17,25 @@ class SinglyLinkedList:
         self.head = None
         self.count = 0
 
+    def __iter__(self):
+        # much easier to trasverse the list using a generator
+        current = self.head
+        while current:
+            yield current.data
+            current = current.next
+
+    def __len__(self):
+        return self.count
+    
+    def __getitem__(self, index):
+        """Retrieve an item by index, returns None if out of bounds."""
+        if 0 <= index < self.count:
+            current = self.head
+            for _ in range(index):
+                current = current.next
+            return current.data
+        return None
+
     def add(self, item):
         new_node = SinglyListNode(item)
         if not self.head:
@@ -137,6 +156,33 @@ class BinaryTree:
     def __init__(self):
         self.root = None
 
+    def preorder_generator(self, node=None):
+        if node is None:
+            node = self.root  # Start at root if first call
+        yield node.data
+        if node.left:
+            yield from self.preorder_generator(node.left)
+        if node.right:
+            yield from self.preorder_generator(node.right)
+
+    def inorder_generator(self, node=None):
+        if node is None:
+            node = self.root
+        if node.left:
+            yield from self.inorder_generator(node.left)
+        yield node.data
+        if node.right:
+            yield from self.inorder_generator(node.right)
+
+    def postorder_generator(self, node=None):
+        if node is None:
+            node = self.root
+        if node.left:
+            yield from self.postorder_generator(node.left)
+        if node.right:
+            yield from self.postorder_generator(node.right)
+        yield node.data
+
     def insert(self, data):
         if not self.root:
             self.root = TreeNode(data)
@@ -205,6 +251,19 @@ class BST(BinaryTree):
             else:
                 current.right = TreeNode(data)
 
+    def search(self, target):
+        return self._search(self.root, target)
+
+    def _search(self, node, target):
+        if not node:
+            return None  # Not found
+        if node.data == target:
+            return node
+        elif node.data > target:
+            return self._search(node.left, target)
+        else:
+            return self._search(node.right, target)
+
 # Dynamic Array
 
 class DynamicArray:
@@ -212,6 +271,19 @@ class DynamicArray:
         self.array = [None] * initial_capacity # imitating a static, non-resizable c-style array (python does not have these)
         self.size = 0
         self.capacity = initial_capacity
+
+    def __iter__(self):
+        for i in range(self.size):
+            yield self.get(i)
+
+    def __len__(self):
+        return self.get_size()
+    
+    def __getitem__(self, index):
+        """Retrieve an item by index, returns None if out of bounds."""
+        for i in range(self.size):
+            if i == index:
+                return self.array[i]
 
     def add(self, item):
         """Add an item to the array. Resizes if needed."""
@@ -264,4 +336,3 @@ class DynamicArray:
     def __str__(self):
         """Return a string representation of the array."""
         return str([self.array[i] for i in range(self.size)])
-

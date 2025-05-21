@@ -1,3 +1,5 @@
+import data_structures as ds
+
 def binary_search_most(items, key_func):
     """Return the item with the highest value based on the key function"""
     if not items:
@@ -47,11 +49,46 @@ def linear_search(items, target_value, key_func):
         items = items.get_all_restaurants()
     
     for item in items:
-        if item and key_func(item).lower() == target_value.lower():
+        if item and str(key_func(item)).lower() == str(target_value).lower():
             results.append(item)
     
     return results
 
+def bfs_search(root, target):
+    if isinstance(root, ds.BinaryTree):
+        root = root.root
+    if not root:
+        return None
+
+    queue = [root]
+
+    while queue:
+        node = queue.pop(0)  # take the first item (like a queue)
+        if node.data == target:
+            return node
+        if node.left:
+            queue.append(node.left)
+        if node.right:
+            queue.append(node.right)
+
+    return None
+
+def dfs_search(root, target):
+    if isinstance(root, ds.BinaryTree):
+        root = root.root
+    if not root:
+        return None
+    if root.data == target:
+        return root
+
+    found = dfs_search(root.left, target)
+    if found:
+        return found
+
+    return dfs_search(root.right, target)
+
+def bst_search(tree, target):
+    tree.search(target)
 
 def merge_sort(items, key_func):
     """Generic merge sort using key function"""

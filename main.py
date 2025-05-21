@@ -2,7 +2,7 @@ from models import Customer, Ride, Restaurant
 from algorithms import quicksort, merge_sort, linear_search, binary_search_by_key
 from data_structures import DynamicArray, SinglyLinkedList, DoublyLinkedList, BinaryTree, BST
 
-import gui
+from gui import Application
 
 # Sample data for testing.
 customers = [
@@ -194,5 +194,5 @@ if __name__ == "__main__":
 
     print("\n=== Compatibility Testing Complete ===")
 
-app = gui.MainGUI()
-app.mainloop()
+app = Application()
+app.tk.mainloop()

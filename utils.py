@@ -50,23 +50,37 @@ def data_to_objects(data, headers):
             ticket_tier = row[4].lower() if len(row) > 4 else 'bronze'  # default to 'bronze' if not found
             if ticket_tier not in tier_order:
                 ticket_tier = 'bronze'  # Ensure ticket_tier is valid
-            customer = Customer(customer_id, name, age, gender, ticket_tier)
+            customer = Customer(int(customer_id), name, age, gender, ticket_tier)
             objects.append(customer)
 
         elif model_class == Restaurant:
             restaurant_id, name, location = row[0], row[1], row[2]
             type_ = row[3:] if len(row) > 3 else []  # Default to empty if no type is provided
-            restaurant = Restaurant(restaurant_id, name, location, type_)
+            restaurant = Restaurant(int(restaurant_id), name, location, type_)
             objects.append(restaurant)
 
         elif model_class == Ride:
             ride_id, name, location, duration, ticket_tier = row[0], row[1], row[2], row[3], row[4].lower()
             if ticket_tier not in tier_order:
                 ticket_tier = 'bronze'  # Default to 'bronze' if not valid
-            ride = Ride(ride_id, name, location, duration, ticket_tier)
+            ride = Ride(int(ride_id), name, location, duration, ticket_tier)
             objects.append(ride)
 
     return objects
+
+def insert_into_ds(ds, objects):
+    if not objects:
+        return ds
+    
+    if hasattr(ds, "insert"):
+        for obj in objects:
+            ds.insert(obj)
+    elif hasattr(ds, "add"):
+        for obj in objects:
+            ds.add(obj)
+    else:
+        print("Error: Unsupported data structure for insertion.")
+    return ds
 
 
 def print_data(filename):

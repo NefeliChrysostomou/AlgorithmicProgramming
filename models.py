@@ -29,17 +29,29 @@ class Model:
         If no attribute is specified, use the class's COMPARE_ATTRIBUTE.
         """
         attr = attr or self.COMPARE_ATTRIBUTE # default to class attribute
+
+        extra = False
+
         if attr is None:
             raise ValueError("No attribute specified for comparison.")
-        if not hasattr(self, attr) or not hasattr(other, attr):
+        if not hasattr(self, attr):
             raise AttributeError(f"Attribute '{attr}' not found in both objects.")
+        if not hasattr(other, attr):
+            if not isinstance(other, Model):
+                extra = True
+            else:
+                raise AttributeError(f"Attribute '{attr}' not found in other object.")
         
+        if extra:
+            other_value = other
+        else:
+            other_value = getattr(other, attr) if not extra else other
+
         if attr == 'ticket_tier': # special behaviur for their ascending order
             self_value = tier_order.index(getattr(self, "ticket_tier"))
-            other_value = tier_order.index(getattr(other, "ticket_tier"))
+            other_value = tier_order.index(other_value)
         else:
             self_value = getattr(self, attr)
-            other_value = getattr(other, attr)
 
         if self_value < other_value:
             return -1
@@ -50,6 +62,9 @@ class Model:
         
     def __lt__(self, other):
         return self.compare(other) < 0
+    
+    def __gt__(self, other):
+        return self.compare(other) > 0
     
     def __eq__(self, other):
         return self.compare(other) == 0
