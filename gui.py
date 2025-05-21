@@ -3,6 +3,7 @@ from tkinter import messagebox, filedialog, ttk, scrolledtext
 import data_structures as ds
 import algorithms as algo
 import utils
+import time
 
 pady = 5
 
@@ -276,9 +277,13 @@ class Application():
             algo.quicksort(self.memory, lambda x: self.get_attr(x))
         
         if self.chosen_algorithm in self.search_algorithms.values():
+            start_time = time.time()
             self.memory = self.chosen_algorithm(self.memory, try_int_conversion(self.search_key.get()), lambda x: self.get_attr(x))
+            end_time = time.time()
         elif self.chosen_algorithm in self.sorting_algorithms.values():
+            start_time = time.time()
             self.memory = self.chosen_algorithm(self.memory, lambda x: self.get_attr(x))
+            end_time = time.time()
         if self.chosen_algorithm in self.search_algorithms_trees.values():
             if isinstance(self.memory, ds.TreeNode):
                 gen = [self.memory]
@@ -286,9 +291,13 @@ class Application():
                 gen = self.memory.inorder_generator()
             for item in gen:
                 item.set_compare_attribute(self.search_attribute)
-            print(self.search_attribute)
+            start_time = time.time()
             self.memory = self.chosen_algorithm(self.memory, try_int_conversion(self.search_key.get()))
-            print("exec res: ", self.memory)
+            end_time = time.time()
+
+        self.execution_time_label.config(text=f"Execution Time: {end_time - start_time:.4f} seconds")
+        self.execution_time_label.grid()
+
         self.update_results_widget("Algorithm Executed: \n")
 
     def get_attr(self, item):
